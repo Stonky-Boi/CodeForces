@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -9,22 +10,21 @@ int main()
     {
         int n;
         cin >> n;
-        int a[n];
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        int max_length = 0;
-        int current_length = 0;
-        for (int i = 0; i < n; i++)
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        int max_length = 0, curr_length = 0;
+        for (const int &i : a)
         {
-            if (a[i] == 0)
+            if (i == 1)
             {
-                current_length++;
-                max_length = max(max_length, current_length);
+                max_length = max(max_length, curr_length);
+                curr_length = 0;
             }
             else
-                current_length = 0;
+                curr_length++;
         }
-        cout << max_length << endl;
+        cout << max(max_length, curr_length) << endl;
     }
     return 0;
 }

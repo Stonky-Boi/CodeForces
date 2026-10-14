@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <numeric>
 using namespace std;
 
 int main()
@@ -9,18 +11,11 @@ int main()
     {
         int n;
         cin >> n;
-        int a[n];
-        int odd_numbers = 0;
-        for (int i = 0; i < n; i++)
-        {
-            cin >> a[i];
-            if (a[i] % 2 != 0)
-                odd_numbers++;
-        }
-        if (odd_numbers % 2 == 0)
-            cout << "YES" << endl;
-        else
-            cout << "NO" << endl;
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        int sum = accumulate(a.begin(), a.end(), 0);
+        cout << (sum % 2 == 0 ? "YES" : "NO") << endl;
     }
     return 0;
 }

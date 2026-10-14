@@ -9,10 +9,7 @@ int main()
     {
         int n;
         cin >> n;
-        if (n % 3 == 0)
-            cout << "Second" << endl;
-        else
-            cout << "First" << endl;
+        cout << (n % 3 == 0 ? "Second" : "First") << endl;
     }
     return 0;
 }

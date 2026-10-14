@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -7,22 +8,19 @@ int main()
     cin >> t;
     while (t--)
     {
-        long int n, k;
-        cin >> n >> k;
+        int n, k;
         string s;
-        cin >> s;
-        int a[26] = {0}, odd_letters = 0;
-        for (int i = 0; i < n; i++)
-            a[s[i] - 'a']++;
-        for (int i = 0; i < 26; i++)
+        cin >> n >> k >> s;
+        vector<int> freq(26, 0);
+        for (const char &c : s)
+            freq[c - 'a']++;
+        int odd_count = 0;
+        for (const int &f : freq)
         {
-            if (a[i] % 2 != 0)
-                odd_letters++;
+            if (f % 2 != 0)
+                odd_count++;
         }
-        if (((odd_letters - k) == 1) || (odd_letters == 0) || (odd_letters == 1) || (k >= odd_letters))
-            cout << "YES" << endl;
-        else
-            cout << "NO" << endl;
+        cout << (k + 1 < odd_count ? "NO" : "YES") << endl;
     }
     return 0;
 }

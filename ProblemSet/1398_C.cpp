@@ -8,20 +8,19 @@ int main()
     cin >> t;
     while (t--)
     {
-        long int n;
-        cin >> n;
+        int n;
         string s;
-        cin >> s;
-        long long int prefix = 0, subarrays = 0;
-        map<long long, long long> frequency;
-        frequency[0] = 1;
-        for (int i = 0; i < n; i++)
+        cin >> n >> s;
+        map<int, long long> freq;
+        long long subarrays = 0;
+        long long prefix = 0;
+        freq[0] = 1;
+        for (const char &c : s)
         {
-            int digit = s[i] - '0';
-            prefix += digit;
-            long long int key = prefix - (i + 1);
-            subarrays += frequency[key];
-            frequency[key]++;
+            int x = c - '0';
+            prefix += x - 1;
+            subarrays += freq[prefix];
+            freq[prefix]++;
         }
         cout << subarrays << endl;
     }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -9,22 +10,19 @@ int main()
     {
         int n, k;
         cin >> n >> k;
-        int a[n];
-        bool subsegment_exists = false;
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        for (int i = 0; i < n; i++)
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        bool exists = false;
+        for (const int i : a)
         {
-            if (a[i] == k)
+            if (i == k)
             {
-                subsegment_exists = true;
+                exists = true;
                 break;
             }
         }
-        if (subsegment_exists)
-            cout << "YES" << endl;
-        else
-            cout << "NO" << endl;
+        cout << (exists ? "YES" : "NO") << endl;
     }
     return 0;
 }

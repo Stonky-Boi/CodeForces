@@ -2,17 +2,6 @@
 #include <vector>
 using namespace std;
 
-void dfs(int node, const vector<vector<int>> &adj, vector<bool> &visited, int &count)
-{
-    visited[node] = true;
-    count++;
-    for (int next : adj[node])
-    {
-        if (!visited[next])
-            dfs(next, adj, visited, count);
-    }
-}
-
 int main()
 {
     int t;
@@ -21,23 +10,23 @@ int main()
     {
         int n;
         cin >> n;
-        vector<vector<int>> adj(n + 1);
-        vector<int> degree(n + 1, 0);
-        bool possible = true;
+        vector<vector<int>> adj(n);
+        vector<int> count(n, 0);
         for (int i = 0; i < n; i++)
         {
             int a, b;
             cin >> a >> b;
-            if (a == b)
-                possible = false;
+            a--;
+            b--;
             adj[a].push_back(b);
             adj[b].push_back(a);
-            degree[a]++;
-            degree[b]++;
+            count[a]++;
+            count[b]++;
         }
-        for (int i = 1; i <= n; i++)
+        bool possible = true;
+        for (const int &i : count)
         {
-            if (degree[i] != 2)
+            if (i != 2)
             {
                 possible = false;
                 break;
@@ -45,18 +34,25 @@ int main()
         }
         if (possible)
         {
-            vector<bool> visited(n + 1, false);
-            for (int i = 1; i <= n; i++)
+            vector<bool> visited(n, false);
+            for (int i = 0; i < n; i++)
             {
-                if (!visited[i])
+                if (visited[i])
+                    continue;
+                int prev = -1, curr = i;
+                int length = 0;
+                while (!visited[curr])
                 {
-                    int count = 0;
-                    dfs(i, adj, visited, count);
-                    if (count % 2 == 1)
-                    {
-                        possible = false;
-                        break;
-                    }
+                    visited[curr] = true;
+                    length++;
+                    int next = (adj[curr][0] == prev ? adj[curr][1] : adj[curr][0]);
+                    prev = curr;
+                    curr = next;
+                }
+                if (length % 2 != 0)
+                {
+                    possible = false;
+                    break;
                 }
             }
         }

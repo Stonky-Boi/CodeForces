@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -7,19 +8,21 @@ int main()
     cin >> t;
     while (t--)
     {
-        vector<string> target(10);
-        for (int i = 0; i < 10; i++)
-            cin >> target[i];
+        vector<string> grid(10);
+        for (string &i : grid)
+            cin >> i;
         int points = 0;
         for (int i = 0; i < 5; i++)
-            for (int j = i; j < target.size() - i; j++)
+        {
+            for (int j = i; j < 10 - i; j++)
             {
-                for (int k = i; k < target[j].size() - i; k++)
+                for (int k = i; k < 10 - i; k++)
                 {
-                    if (target[j][k] == 'X')
+                    if (grid[j][k] == 'X')
                         points++;
                 }
             }
+        }
         cout << points << endl;
     }
     return 0;

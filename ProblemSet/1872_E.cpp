@@ -10,22 +10,20 @@ int main()
     {
         int n;
         cin >> n;
-        vector<long long> a(n);
-        ;
-        for (auto &i : a)
+        vector<int> a(n);
+        for (int &i : a)
             cin >> i;
         string s;
         cin >> s;
-        vector<long long> prefix(n + 1, 0);
-        for (int i = 1; i <= n; i++)
-            prefix[i] = prefix[i - 1] ^ a[i - 1];
-        long long xor_zero = 0, xor_one = 0;
+        vector<int> prefix_xor(n + 1, 0);
+        int xor0 = 0, xor1 = 0;
         for (int i = 0; i < n; i++)
         {
             if (s[i] == '0')
-                xor_zero ^= a[i];
+                xor0 ^= a[i];
             else
-                xor_one ^= a[i];
+                xor1 ^= a[i];
+            prefix_xor[i + 1] = prefix_xor[i] ^ a[i];
         }
         int q;
         cin >> q;
@@ -37,15 +35,15 @@ int main()
             {
                 int l, r;
                 cin >> l >> r;
-                long long segment_xor = prefix[r] ^ prefix[l - 1];
-                xor_zero ^= segment_xor;
-                xor_one ^= segment_xor;
+                int segment = prefix_xor[r] ^ prefix_xor[l - 1];
+                xor0 ^= segment;
+                xor1 ^= segment;
             }
             else
             {
                 int g;
                 cin >> g;
-                cout << (g == 0 ? xor_zero : xor_one) << " ";
+                cout << (g == 0 ? xor0 : xor1) << " ";
             }
         }
         cout << endl;

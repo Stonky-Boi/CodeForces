@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <limits>
 using namespace std;
 
 int main()
@@ -11,18 +12,15 @@ int main()
     {
         int n;
         cin >> n;
-        int a[n], b[n];
-        for (auto &i : a)
-            cin >> i;
-        b[0] = a[0];
-        int max_diff = 0;
-        for (int i = 1; i < n; i++)
+        vector<int> a(n);
+        int seconds = 0, b = numeric_limits<int>::min();
+        for (int &i : a)
         {
-            b[i] = max(b[i - 1], a[i]);
-            max_diff = max(max_diff, b[i] - a[i]);
+            cin >> i;
+            b = max(b, i);
+            seconds = max(seconds, b - i);
         }
-        int T = (max_diff == 0 ? 0 : ceil(log2(max_diff + 1)));
-        cout << T << endl;
+        cout << ceil(log2(seconds + 1)) << endl;
     }
     return 0;
 }

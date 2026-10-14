@@ -7,23 +7,9 @@ int main()
     cin >> t;
     while (t--)
     {
-        long int a, b, c;
+        int a, b, c;
         cin >> a >> b >> c;
-        int anna = a, katie = b;
-        if (c % 2 == 0)
-        {
-            anna += c / 2;
-            katie += c / 2;
-        }
-        else
-        {
-            anna += (c / 2) + 1;
-            katie += c / 2;
-        }
-        if (anna > katie)
-            cout << "First" << endl;
-        else
-            cout << "Second" << endl;
+        cout << (((c + 1) / 2 + a > c / 2 + b) ? "First" : "Second") << endl;
     }
     return 0;
 }

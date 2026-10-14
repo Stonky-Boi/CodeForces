@@ -1,5 +1,14 @@
 #include <iostream>
+#include <vector>
 using namespace std;
+
+bool valid(vector<int> &a, int x, int h)
+{
+    long long water = 0;
+    for (const int &i : a)
+        water += max(0, h - i);
+    return water <= x;
+}
 
 int main()
 {
@@ -7,39 +16,25 @@ int main()
     cin >> t;
     while (t--)
     {
-        long long int n, x;
+        int n, x;
         cin >> n >> x;
-        long long int a[n];
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        long long int maximum_height = a[0], minimum_height = a[0];
-        for (int i = 0; i < n; i++)
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        int l = 0, r = 2e9;
+        int maximum = 0;
+        while (l <= r)
         {
-            if (a[i] > maximum_height)
-                maximum_height = a[i];
-            if (a[i] < minimum_height)
-                minimum_height = a[i];
-        }
-        long long int h = minimum_height;
-        maximum_height += x;
-        while (minimum_height <= maximum_height)
-        {
-            long long int middle = (minimum_height + maximum_height) / 2;
-            long long int water_used = 0;
-            for (int i = 0; i < n; i++)
+            int m = l + (r - l) / 2;
+            if (valid(a, x, m))
             {
-                if (a[i] < middle)
-                    water_used += (middle - a[i]);
-            }
-            if (water_used <= x)
-            {
-                h = middle;
-                minimum_height = middle + 1;
+                maximum = m;
+                l = m + 1;
             }
             else
-                maximum_height = middle - 1;
+                r = m - 1;
         }
-        cout << h << endl;
+        cout << maximum << endl;
     }
     return 0;
 }

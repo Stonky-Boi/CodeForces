@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -9,20 +10,20 @@ int main()
     {
         int n, k;
         cin >> n >> k;
-        int a[n], b[n];
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        for (int i = 0; i < n; i++)
-            cin >> b[i];
-        int experience = 0, sum = 0, max_b = 0;
+        vector<int> a(n), b(n);
+        for (int &i : a)
+            cin >> i;
+        for (int &i : b)
+            cin >> i;
+        int sum = 0, maximum = 0;
+        int points = 0;
         for (int i = 0; i < min(n, k); i++)
         {
             sum += a[i];
-            max_b = max(max_b, b[i]);
-            int total_xp = sum + max_b * (k - i - 1);
-            experience = max(experience, total_xp);
+            maximum = max(maximum, b[i]);
+            points = max(points, sum + maximum * (k - i - 1));
         }
-        cout << experience << endl;
+        cout << points << endl;
     }
     return 0;
 }

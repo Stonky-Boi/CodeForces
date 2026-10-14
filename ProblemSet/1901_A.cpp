@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -9,16 +10,18 @@ int main()
     {
         int n, x;
         cin >> n >> x;
-        int a[n + 2];
-        a[0] = 0;
-        a[n + 1] = x;
-        for (int i = 1; i <= n; i++)
-            cin >> a[i];
-        int volume = 0;
-        for (int i = 1; i < n + 2; i++)
-            volume = max(volume, a[i] - a[i - 1]);
-        volume = max(volume, 2 * (x - a[n]));
-        cout << volume << endl;
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        int capacity = 0;
+        int prev = 0;
+        for (const int &i : a)
+        {
+            capacity = max(capacity, i - prev);
+            prev = i;
+        }
+        capacity = max(capacity, 2 * (x - a[n - 1]));
+        cout << capacity << endl;
     }
     return 0;
 }

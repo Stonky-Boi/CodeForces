@@ -3,56 +3,60 @@
 #include <algorithm>
 using namespace std;
 
+bool valid(vector<int> &a, int n, int k, int target)
+{
+    for (int i = 0; i < n; i++)
+    {
+        int operations = 0;
+        int need = target;
+        for (int j = i; j < n; j++)
+        {
+            if (a[j] >= need)
+                break;
+            if (j == n - 1)
+            {
+                operations = 1e9;
+                break;
+            }
+            operations += need - a[j];
+            need--;
+            if (operations > k)
+                break;
+        }
+        if (operations <= k)
+            return true;
+    }
+    return false;
+}
+
 int main()
 {
     int t;
     cin >> t;
     while (t--)
     {
-        int n;
-        long long k;
+        int n, k;
         cin >> n >> k;
-        vector<long long> a(n);
-        for (long long &i : a)
-            cin >> i;
-        long long left = *max_element(a.begin(), a.end());
-        long long right = left + k;
-        long long maximum = left;
-        while (left <= right)
+        vector<int> a(n);
+        int max_value = 0;
+        for (int &i : a)
         {
-            long long mid = (left + right) / 2;
-            bool possible = false;
-            for (int i = 0; i < n; i++)
+            cin >> i;
+            max_value = max(max_value, i);
+        }
+        int l = max_value;
+        int r = max_value + n;
+        int maximum = max_value;
+        while (l <= r)
+        {
+            int m = l + (r - l) / 2;
+            if (valid(a, n, k, m))
             {
-                long long need = mid;
-                long long cost = 0;
-                for (int j = i; j < n; j++)
-                {
-                    if (need <= a[j])
-                        break;
-                    if (j == n - 1)
-                    {
-                        cost = k + 1;
-                        break;
-                    }
-                    cost += (need - a[j]);
-                    if (cost > k)
-                        break;
-                    need--;
-                }
-                if (cost <= k)
-                {
-                    possible = true;
-                    break;
-                }
-            }
-            if (possible)
-            {
-                maximum = mid;
-                left = mid + 1;
+                maximum = m;
+                l = m + 1;
             }
             else
-                right = mid - 1;
+                r = m - 1;
         }
         cout << maximum << endl;
     }

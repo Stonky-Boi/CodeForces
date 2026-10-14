@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int main()
@@ -9,27 +11,24 @@ int main()
     {
         int n, m;
         cin >> n >> m;
-        int a[n][m];
-        for (int i = 0; i < n; i++)
+        vector<vector<int>> c(n, vector<int>(m));
+        for (vector<int> &v : c)
+            for (int &i : v)
+                cin >> i;
+        long long winnings = 0;
+        vector<int> column(n);
+        for (int j = 0; j < m; j++)
         {
-            for (int j = 0; j < m; j++)
-                cin >> a[i][j];
-        }
-        long long int total_pot = 0;
-        int temp[n];
-        for (int col = 0; col < m; col++)
-        {
-            for (int row = 0; row < n; ++row)
-                temp[row] = a[row][col];
-            sort(temp, temp + n);
-            long long int prefix_sum = 0;
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < n; i++)
+                column[i] = c[i][j];
+            sort(column.begin(), column.end());
+            for (int i = 0; i < n; i++)
             {
-                total_pot += 1LL * temp[i] * i - prefix_sum;
-                prefix_sum += temp[i];
+                winnings += 1ll * column[i] * i;
+                winnings -= 1ll * column[i] * (n - i - 1);
             }
         }
-        cout << total_pot << endl;
+        cout << winnings << endl;
     }
     return 0;
 }

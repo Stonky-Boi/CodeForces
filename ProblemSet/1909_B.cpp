@@ -1,6 +1,18 @@
 #include <iostream>
-#include <numeric>
+#include <vector>
+#include <algorithm>
 using namespace std;
+
+long long gcd(long long a, long long b)
+{
+    while (b)
+    {
+        long long r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
 
 int main()
 {
@@ -10,13 +22,13 @@ int main()
     {
         int n;
         cin >> n;
-        long long int a[n];
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        sort(a, a + n);
-        long long int k = a[1] - a[0];
-        for (int i = 1; i < n - 1; i++)
-            k = gcd(k, a[i + 1] - a[i]);
+        vector<long long> a(n);
+        for (long long &i : a)
+            cin >> i;
+        sort(a.begin(), a.end());
+        long long k = 0;
+        for (int i = 1; i < n; i++)
+            k = gcd(k, a[i] - a[i - 1]);
         k *= 2;
         cout << k << endl;
     }

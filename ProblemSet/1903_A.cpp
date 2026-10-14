@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -9,22 +10,19 @@ int main()
     {
         int n, k;
         cin >> n >> k;
-        int a[n];
-        for (int i = 0; i < n; i++)
-            cin >> a[i];
-        bool ascending = true;
-        for (int i = 0; i < n - 1; i++)
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        bool sorted = true;
+        for (int i = 1; i < n; i++)
         {
-            if (a[i] > a[i + 1])
+            if (a[i - 1] > a[i])
             {
-                ascending = false;
+                sorted = false;
                 break;
             }
         }
-        if ((k == 1) && (!ascending))
-            cout << "NO" << endl;
-        else
-            cout << "YES" << endl;
+        cout << ((!sorted && k == 1) ? "NO" : "YES") << endl;
     }
     return 0;
 }

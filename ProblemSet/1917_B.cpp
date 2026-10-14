@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -8,19 +9,18 @@ int main()
     while (t--)
     {
         int n;
-        cin >> n;
         string s;
-        cin >> s;
-        vector<long int> distinct_strings(n, 0);
-        vector<int> next_position(26, n);
-        distinct_strings[n - 1] = 1;
-        next_position[s[n - 1] - 'a'] = n - 1;
-        for (int i = n - 2; i >= 0; i--)
+        cin >> n >> s;
+        vector<int> freq(26, 0);
+        int distinct = 0, count = 0;
+        for (const char &c : s)
         {
-            distinct_strings[i] = distinct_strings[i + 1] + (next_position[s[i] - 'a'] - i);
-            next_position[s[i] - 'a'] = i;
+            if (freq[c - 'a'] == 0)
+                count++;
+            freq[c - 'a']++;
+            distinct += count;
         }
-        cout << distinct_strings[0] << endl;
+        cout << distinct << endl;
     }
     return 0;
 }

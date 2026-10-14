@@ -1,42 +1,30 @@
 #include <iostream>
 #include <vector>
-#include <set>
 #include <queue>
 using namespace std;
 
-const int MAXN = 200000;
-vector<set<int>> adj;
-vector<bool> visited;
-vector<int> degree_list;
-
-void bfs(int start, int &paths, int &cycles)
+void bfs(vector<vector<int>> &adj, vector<bool> &visited, int start, int &bamboos, int &cycles)
 {
     queue<int> q;
     q.push(start);
     visited[start] = true;
-    vector<int> component;
-    component.push_back(start);
+    bool bamboo = false;
     while (!q.empty())
     {
         int u = q.front();
         q.pop();
-        for (auto v : adj[u])
-            if (!visited[v])
-            {
-                visited[v] = true;
-                q.push(v);
-                component.push_back(v);
-            }
-    }
-    bool degree_one = false;
-    for (auto node : component)
-        if (degree_list[node] == 1)
+        if (adj[u].size() == 1)
+            bamboo = true;
+        for (int v : adj[u])
         {
-            degree_one = true;
-            break;
+            if (visited[v])
+                continue;
+            visited[v] = true;
+            q.push(v);
         }
-    if (degree_one)
-        paths++;
+    }
+    if (bamboo)
+        bamboos++;
     else
         cycles++;
 }
@@ -49,26 +37,32 @@ int main()
     {
         int n;
         cin >> n;
-        adj.assign(n, {});
-        visited.assign(n, false);
-        degree_list.assign(n, 0);
         vector<int> a(n);
+        for (int &i : a)
+        {
+            cin >> i;
+            i--;
+        }
+        vector<vector<int>> adj(n);
         for (int i = 0; i < n; i++)
         {
-            cin >> a[i];
-            a[i]--;
-            adj[i].insert(a[i]);
-            adj[a[i]].insert(i);
+            int j = a[i];
+            if (a[j] == i && i > j)
+                continue;
+            adj[i].push_back(j);
+            adj[j].push_back(i);
         }
+        vector<bool> visited(n, false);
+        int bamboos = 0;
+        int cycles = 0;
         for (int i = 0; i < n; i++)
-            degree_list[i] = (int)adj[i].size();
-        int paths = 0, cycles = 0;
-        for (int i = 0; i < n; i++)
+        {
             if (!visited[i])
-                bfs(i, paths, cycles);
-        int min_dances = cycles + min(paths, 1);
-        int max_dances = cycles + paths;
-        cout << min_dances << " " << max_dances << endl;
+                bfs(adj, visited, i, bamboos, cycles);
+        }
+        int minimum = cycles + min(bamboos, 1);
+        int maximum = cycles + bamboos;
+        cout << minimum << " " << maximum << endl;
     }
     return 0;
 }

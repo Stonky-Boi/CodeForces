@@ -6,79 +6,71 @@ using namespace std;
 
 int main()
 {
+    int MAXA = 3e5;
     int n;
     cin >> n;
     vector<int> a(n);
-    int max_a = 300000;
     for (int &i : a)
         cin >> i;
     int s, t;
     cin >> s >> t;
     s--;
     t--;
-    if (s == t)
+    vector<int> spf(MAXA + 1); // smallest prime factor
+    for (int i = 2; i <= MAXA; i++)
     {
-        cout << 1 << endl;
-        cout << s + 1 << endl;
-        return 0;
-    }
-    vector<int> prime_factor(max_a + 1);
-    for (int i = 0; i <= max_a; i++)
-        prime_factor[i] = i;
-    for (int i = 2; i * i <= max_a; i++)
-    {
-        if (prime_factor[i] == i)
+        if (spf[i] == 0)
         {
-            for (int j = i * i; j <= max_a; j += i)
+            for (int j = i; j <= MAXA; j += i)
             {
-                if (prime_factor[j] == j)
-                    prime_factor[j] = i;
+                if (spf[j] == 0)
+                    spf[j] = i;
             }
         }
     }
-    vector<vector<int>> factors(n);
+    vector<vector<int>> adj(MAXA + 1); // primes to spiders
     for (int i = 0; i < n; i++)
     {
         int x = a[i];
         while (x > 1)
         {
-            int p = prime_factor[x];
-            factors[i].push_back(p);
+            int p = spf[x];
+            adj[p].push_back(i);
             while (x % p == 0)
                 x /= p;
         }
     }
-    vector<vector<int>> divisible(max_a + 1);
-    for (int i = 0; i < n; i++)
-    {
-        for (int p : factors[i])
-            divisible[p].push_back(i);
-    }
     vector<int> parent(n, -1);
     vector<bool> visited(n, false);
-    vector<bool> used_prime(max_a + 1, false);
+    vector<bool> used_prime(MAXA + 1, false);
     queue<int> q;
     q.push(s);
     visited[s] = true;
     while (!q.empty())
     {
-        int v = q.front();
+        int u = q.front();
         q.pop();
-        if (v == t)
+        if (u == t)
             break;
-        for (int p : factors[v])
+        int x = a[u];
+        while (x > 1)
         {
-            if (used_prime[p])
-                continue;
-            used_prime[p] = true;
-            for (int u : divisible[p])
+            int p = spf[x];
+            if (!used_prime[p])
             {
-                if (visited[u])
-                    continue;
-                visited[u] = true;
-                parent[u] = v;
-                q.push(u);
+                used_prime[p] = true;
+                for (int v : adj[p])
+                {
+                    if (!visited[v])
+                    {
+                        visited[v] = true;
+                        parent[v] = u;
+                        q.push(v);
+                    }
+                }
             }
+            while (x % p == 0)
+                x /= p;
         }
     }
     if (!visited[t])
@@ -87,16 +79,16 @@ int main()
         return 0;
     }
     vector<int> path;
-    for (int v = t; v != -1; v = parent[v])
-        path.push_back(v);
+    int curr = t;
+    while (curr != -1)
+    {
+        path.push_back(curr + 1);
+        curr = parent[curr];
+    }
     reverse(path.begin(), path.end());
     cout << path.size() << endl;
-    for (int i = 0; i < path.size(); i++)
-    {
-        cout << path[i] + 1;
-        if (i + 1 < path.size())
-            cout << ' ';
-    }
+    for (const int &v : path)
+        cout << v << " ";
     cout << endl;
     return 0;
 }

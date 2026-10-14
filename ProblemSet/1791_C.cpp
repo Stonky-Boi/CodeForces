@@ -8,18 +8,16 @@ int main()
     while (t--)
     {
         int n;
+        cin >> n;
         string s;
-        cin >> n >> s;
-        while ((s[0] == '0' && s[n - 1] == '1') || (s[0] == '1' && s[n - 1] == '0') && n > 1)
+        cin >> s;
+        int l = 0, r = s.size() - 1;
+        while (l < r && (s[l] - '0') + (s[r] - '0') == 1)
         {
-            s = s.substr(1, n - 2);
-            n = n - 2;
+            l++;
+            r--;
         }
-        if (s == "0")
-            n = 1;
-        if (s == "")
-            n = 0;
-        cout << n << endl;
+        cout << r - l + 1 << endl;
     }
     return 0;
 }

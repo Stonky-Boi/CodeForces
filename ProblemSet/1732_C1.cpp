@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-long long range_cost(int l, int r, const vector<long long> &prefix_sum, const vector<long long> &prefix_xor)
+long long get_value(int l, int r, vector<long long> &prefix_sum, vector<long long> &prefix_xor)
 {
     long long s = prefix_sum[r] - prefix_sum[l - 1];
     long long x = prefix_xor[r] ^ prefix_xor[l - 1];
@@ -17,40 +17,44 @@ int main()
     {
         int n, q;
         cin >> n >> q;
-        vector<long long> prefix_sum(n + 1, 0);
-        vector<long long> prefix_xor(n + 1, 0);
-        for (int i = 1; i <= n; ++i)
+        vector<int> a(n);
+        for (int &i : a)
+            cin >> i;
+        vector<long long> prefix_sum(n + 1, 0), prefix_xor(n + 1, 0);
+        for (int i = 0; i < n; i++)
         {
-            long long x;
-            cin >> x;
-            prefix_sum[i] = prefix_sum[i - 1] + x;
-            prefix_xor[i] = prefix_xor[i - 1] ^ x;
+            prefix_sum[i + 1] = prefix_sum[i] + a[i];
+            prefix_xor[i + 1] = prefix_xor[i] ^ a[i];
         }
-        int L, R;
-        cin >> L >> R; // for C1: L==1, R==n
-        long long best_cost = range_cost(1, n, prefix_sum, prefix_xor);
-        int l = 1, r = n;
-        while (l < r)
+        while (q--)
         {
-            int m = l + (r - l) / 2;
-            bool possible = false;
-            for (int i = 1; i + m - 1 <= n; i++)
-                if (range_cost(i, i + m - 1, prefix_sum, prefix_xor) == best_cost)
-                {
-                    possible = true;
-                    break;
-                }
-            if (possible)
-                r = m;
-            else
-                l = m + 1;
-        }
-        for (int i = 1; i + l - 1 <= n; i++)
-            if (range_cost(i, i + l - 1, prefix_sum, prefix_xor) == best_cost)
+            int L, R;
+            cin >> L >> R;
+            long long target = get_value(L, R, prefix_sum, prefix_xor);
+            int left = L;
+            int right = R;
+            for (int i = L; i <= R; i++)
             {
-                cout << i << " " << (i + l - 1) << endl;
-                break;
+                if (get_value(i, R, prefix_sum, prefix_xor) < target)
+                    continue;
+                int l = i;
+                int r = R;
+                while (l < r)
+                {
+                    int m = l + (r - l) / 2;
+                    if (get_value(i, m, prefix_sum, prefix_xor) >= target)
+                        r = m;
+                    else
+                        l = m + 1;
+                }
+                if (l - i < right - left)
+                {
+                    left = i;
+                    right = l;
+                }
             }
+            cout << left << " " << right << endl;
+        }
     }
     return 0;
 }
